@@ -71,9 +71,11 @@ otherwise `none` for all other cases.
 9. Запускаем приложение:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/08_app_running.png)  
 
-10. Теперь смотрим структуру созданных таблиц:  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/09_tables_structure_1.png)    
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/10_tables_structure_2.png)  
+10. Теперь смотрим созданные таблицы. Сгенерированы 2 независимые таблицы (внешних ключей нет, только первичные).
+Они включают поля родительского класса и свои:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/09_tables_structure.png)  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/10_quick_documentation.png)  
 
-и их содержимое:  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/11_tables_contain.png)  
+11. В итоге сохранять можно только дочерние сущности — они пойдут в независимые таблицы
+и будут включать поля родительской сущности. Отдельно Customer не сохранить, это абстракция, в которую
+вынесена часть полей.
