@@ -42,7 +42,7 @@ This is controlled through two external properties:
 - `spring.jpa.hibernate.ddl-auto` (enum) is a Hibernate feature that controls the behavior
 in a more fine-grained way. See below for more detail.
 
-Hibernate property values are:
+You can set `spring.jpa.hibernate.ddl-auto` explicitly and the standard Hibernate property values are:
 - `create` – Hibernate first drops existing tables, then creates new tables.
 - `update` – the object model created based on the mappings (annotations or XML) is compared with the existing schema,
 and then Hibernate updates the schema according to the diff. It never deletes the existing tables or columns
@@ -55,15 +55,52 @@ are completed. Typically used for unit testing.
 Spring Boot internally defaults this parameter value to `create-drop` if no schema manager has been detected,
 otherwise `none` for all other cases.
 
+**В продакшене лучше выставлять значения `false` и `none`!**
+
 7. Главный класс выглядит так:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/06_main_class.png)  
 
-С помощью методов помеченных **@PostConstruct** и **@PreDestroy** выполняются операции
-перед инициализацией и уничтожением компонента. Есть 3 способа определить операции, выполняемые
-до того, как контейнер Spring инициализирует бины и уничтожит их:
-- первый способ: с помощью _@PostConstruct_ и _@PreDestroy_. **Здесь используем этот способ!** 
-- второй способ: путём определения методов _init-method_ и _destory-method_ в xml.
-- третий способ: реализация интерфейсов _InitializingBean_ и _DisposableBean_ с помощью bean-компонентов.
+Spring allows us to attach custom actions to _bean creation and destruction_. We can, for example, do it
+by implementing the _InitializingBean_ and _DisposableBean_ interfaces. A second possibility: the _@PostConstruct_
+and _@PreDestroy_ annotations.
+
+**Spring calls methods annotated with @PostConstruct only once, just after the initialization of bean properties**.
+Keep in mind that these methods will run even if there is nothing to initialize.
+The method annotated with _@PostConstruct_ can have any access level but it can't be static.
+One example usage of @PostConstruct is populating a database. During development, for instance,
+we might want to create some default users:
+
+    @Component
+    public class DbInit {
+        
+        @Autowired
+        private UserRepository userRepository;
+    
+        @PostConstruct
+        private void postConstruct() {
+            User admin = new User("admin", "admin password");
+            User normalUser = new User("user", "user password");
+            userRepository.save(admin, normalUser);
+        }
+    }
+
+The above example will first initialize _UserRepository_ and then run _@PostConstruct_ method.
+
+**A method annotated with @PreDestroy runs only once, just before Spring removes our bean from the application context**.
+Same as with _@PostConstruct_, the methods annotated with _@PreDestroy_ can have any access level but can't be static.
+
+    @Component
+    public class UserRepository {
+    
+        private DbConnection dbConnection;
+        @PreDestroy
+        public void preDestroy() {
+            dbConnection.close();
+        }
+    }
+
+The purpose of this method should be to release resources or perform any other cleanup tasks
+before the bean gets destroyed, for example closing a database connection.
 
 8. Далее настроить подключение к БД на вкладке Database:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/07_data_source.png)  
