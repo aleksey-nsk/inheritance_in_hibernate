@@ -1,5 +1,5 @@
 # Info
-- Стратегии наследования в Hibernate.
+- **Стратегии наследования в Hibernate**.
 - Простые примеры кода.
 
 ### Модуль example1_mapped_superclass
@@ -11,27 +11,28 @@
 вынести общие поля.
 
 3. Создаём родительский класс _Person_:  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/01_parent_class.png)     
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/01_parent_class.png)  
+   
 _Person_ — не сущность, в него просто вынесены общие поля сущностей _Employee_ и _Customer_.
-Класс _Person_ можно сделать _абстрактным_. Этот класс можно было бы назвать _AbstractEntity_.
+Класс _Person_ можно сделать **абстрактным**. Этот класс можно было бы назвать _AbstractEntity_.
 Ассоциаций (_@ManyToOne_, _@OneToMany_ и т.д.) с ним сделать нельзя!
 
-**GenerationType.SEQUENCE** ("sequence" - "последовательность") - это специальный тип для генерации
+**GenerationType.SEQUENCE** ("_sequence_" - "_последовательность_") - это специальный тип для генерации
 значений из последовательности. Создаёте в базе данных, которая его поддерживает, например Postgres:  
 `CREATE SEQUENCE my_seq START WITH 100000;`  
 Используете в качестве генератора.
 
-`allocationSize` ("allocation" - "распределение") указывает Hibernat-у сколько нужно резервировать значений
-из последовательности за одно обращение к базе данных. В данном случае на каждое обращение - 1 раз. Чем больше,
+`allocationSize` ("_allocation_" - "_распределение_") указывает Hibernat-у сколько нужно резервировать значений
+из последовательности за одно обращение к базе данных. В данном случае на каждое обращение - 1 значение. Чем больше,
 тем сильнее снижается нагрузка на базу данных, но больше расходуется последовательность (иногда впустую).
 
-4. Дочерние классы Employee и Customer:  
+4. Дочерние классы _Employee_ и _Customer_:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/02_03_employee_and_customer.png)  
 
-5. Использована БД Postgres в контейнере Docker. Настройки контейнера указываем в файле docker-compose.yaml:  
+5. Использована БД _Postgres_ в контейнере _Docker_. Настройки контейнера указываем в файле `docker-compose.yaml`:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/04_docker_compose.png)  
 
-6. Настройки подключения к БД прописываем в файле application.yaml:  
+6. Настройки подключения к БД прописываем в файле `application.yaml`:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/05_application.png)  
 
 In Spring/Spring-Boot, SQL database can be initialized in different ways depending on what your stack is.
@@ -57,13 +58,12 @@ otherwise `none` for all other cases.
 7. Главный класс выглядит так:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/06_main_class.png)  
 
-С помощью методов помеченных @PostConstruct и @PreDestroy выполняются операции
+С помощью методов помеченных **@PostConstruct** и **@PreDestroy** выполняются операции
 перед инициализацией и уничтожением компонента. Есть 3 способа определить операции, выполняемые
 до того, как контейнер Spring инициализирует бины и уничтожит их:
-- первый способ: с помощью методов @PostConstruct и @PreDestroy для выполнения операции перед инициализацией
-и уничтожением компонента. Здесь используем этот способ! 
-- второй способ: путём определения методов init-method и destory-method в xml.
-- третий способ: реализация интерфейсов InitializingBean и DisposableBean с помощью bean-компонентов.
+- первый способ: с помощью _@PostConstruct_ и _@PreDestroy_. **Здесь используем этот способ!** 
+- второй способ: путём определения методов _init-method_ и _destory-method_ в xml.
+- третий способ: реализация интерфейсов _InitializingBean_ и _DisposableBean_ с помощью bean-компонентов.
 
 8. Далее настроить подключение к БД на вкладке Database:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/07_data_source.png)  
@@ -77,5 +77,5 @@ otherwise `none` for all other cases.
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/10_quick_documentation.png)  
 
 11. В итоге сохранять можно только дочерние сущности — они пойдут в независимые таблицы
-и будут включать поля родительской сущности. Отдельно Customer не сохранить, это абстракция, в которую
+и будут включать поля родительской сущности. Отдельно _Customer_ не сохранить, это абстракция, в которую
 вынесена часть полей.
