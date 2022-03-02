@@ -26,7 +26,7 @@ public class Example1Application {
 
     @PostConstruct
     public void init() {
-        System.out.println("I am init method, using @PostConstruct");
+        System.out.println("I am init() method, using @PostConstruct");
 
         Employee employee = new Employee();
         employee.setMonthsInCompany(12);
@@ -41,6 +41,6 @@ public class Example1Application {
 
     @PreDestroy
     public void destroy() {
-        System.out.println("I am destroy method, using @PreDestroy");
+        System.out.println("I am destroy() method, using @PreDestroy");
     }
 }

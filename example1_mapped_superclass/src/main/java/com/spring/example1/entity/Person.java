@@ -2,6 +2,7 @@ package com.spring.example1.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
 @MappedSuperclass
