@@ -93,6 +93,7 @@ Same as with _@PostConstruct_, the methods annotated with _@PreDestroy_ can have
     public class UserRepository {
     
         private DbConnection dbConnection;
+        
         @PreDestroy
         public void preDestroy() {
             dbConnection.close();
