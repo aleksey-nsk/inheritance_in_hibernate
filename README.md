@@ -137,7 +137,7 @@ before the bean gets destroyed, for example closing a database connection.
 4. Главный класс выглядит так:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/03_main_class.png)  
 
-5. Запускаю:  
+5. Запускаем приложение:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/04_run.png)  
 
 6. Генерируются такие независимые таблицы (внешних ключей нет, только первичные):  
@@ -153,5 +153,4 @@ before the bean gets destroyed, for example closing a database connection.
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/08_using_select.png)  
 
 В итоге опять запускаем приложение, и смотрим запрос, который сгенерирует Hibernate:  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/09_run.png)  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/10_select.png)  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/09_run_and_select.png)  
