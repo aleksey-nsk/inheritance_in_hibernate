@@ -121,9 +121,8 @@ before the bean gets destroyed, for example closing a database connection.
 
 ### Модуль example2_table_per_class
 1. **Рассмотрим стратегию наследования _InheritanceType.TABLE_PER_CLASS_. При такой стратегии классы преобразуются
-в независимые таблицы**.
+в независимые таблицы. Сохранять можно все сущности (родительские и дочерние) — они пойдут в независимые таблицы**.
 
-Сохранять можно все сущности (родительские и дочерние) — они пойдут в независимые таблицы.
 Заметим, что при стратегии наследования _InheritanceType.TABLE_PER_CLASS_ нельзя использовать такую стратегию
 генерации идентификатора: `@GeneratedValue(strategy = GenerationType.IDENTITY)` - такая стратегия задаёт
 автоинкрементное поле. В данном примере используем `@GeneratedValue(strategy = GenerationType.SEQUENCE)` — так можно.
