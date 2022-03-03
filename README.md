@@ -153,3 +153,28 @@ before the bean gets destroyed, for example closing a database connection.
 
 В итоге опять запускаем приложение, и смотрим запрос, который сгенерирует Hibernate:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/09_run_and_select.png)  
+
+### Модуль example3_joined
+1. **Рассмотрим тип наследования _JOINED_. Аннотация _@Inheritance_ со значением _InheritanceType.JOINED_ говорит
+о том, что будет общая таблица для хранения общих данных, плюс данные каждого наследника тоже будут храниться
+в отдельной таблице**.
+
+2. Класс _Person_ содержит общие данные, такие как имя (имя есть у всех):  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/01_class_person.png)  
+
+3. Наследники (_Employee_ и _Customer_):  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/02_classes_employee_and_customer.png)  
+
+4. Главный класс выглядит так:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/03_main_class.png)  
+
+5. Запускаем приложение:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/04_run.png)  
+
+6. Схема в базе данных: вышеприведенные классы генерируют такую структуру в базе данных:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/05_tables.png)  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/06_quick_doc.png)  
+**Первичные ключи** `employees.id` и `customers.id` являются заодно и **внешними**: они ссылаются на `persons.id`.
+
+7. Запрос, который сгенерирует Hibernate, для получения списка всех людей:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/07_select.png)  

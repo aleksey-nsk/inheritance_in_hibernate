@@ -1,0 +1,11 @@
+spring:
+    datasource:
+        driver-class-name: org.postgresql.Driver
+        url: jdbc:postgresql://localhost:15433/ex3
+        username: admin3
+        password: pswd3
+    jpa:
+        show-sql: true
+        generate-ddl: true
+        hibernate:
+            ddl-auto: create
