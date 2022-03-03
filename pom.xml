@@ -11,6 +11,7 @@
 
     <modules>
         <module>example1_mapped_superclass</module>
+        <module>example2_table_per_class</module>
     </modules>
 
 </project>

@@ -10,7 +10,10 @@
 в независимые таблицы. _@MappedSuperclass_ никак не влияет на структуру в базе — это просто способ
 вынести общие поля.
 
-3. Создаём родительский класс _Person_:  
+3. Структура модуля:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/00_structure.png)  
+
+4. Создаём родительский класс _Person_:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/01_parent_class.png)  
    
 _Person_ — не сущность, в него просто вынесены общие поля сущностей _Employee_ и _Customer_.
@@ -26,13 +29,13 @@ _Person_ — не сущность, в него просто вынесены о
 из последовательности за одно обращение к базе данных. В данном случае на каждое обращение - 1 значение. Чем больше,
 тем сильнее снижается нагрузка на базу данных, но больше расходуется последовательность (иногда впустую).
 
-4. Дочерние классы _Employee_ и _Customer_:  
+5. Дочерние классы _Employee_ и _Customer_:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/02_03_employee_and_customer.png)  
 
-5. Использована БД _Postgres_ в контейнере _Docker_. Настройки контейнера указываем в файле `docker-compose.yaml`:  
+6. Использована БД _Postgres_ в контейнере _Docker_. Настройки контейнера указываем в файле `docker-compose.yaml`:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/04_docker_compose.png)  
 
-6. Настройки подключения к БД прописываем в файле `application.yaml`:  
+7. Настройки подключения к БД прописываем в файле `application.yaml`:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/05_application.png)  
 
 In Spring/Spring-Boot, SQL database can be initialized in different ways depending on what your stack is.
@@ -57,7 +60,7 @@ otherwise `none` for all other cases.
 
 **В продакшене лучше выставлять значения `false` и `none`!**
 
-7. Главный класс выглядит так:  
+8. Главный класс выглядит так:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/06_main_class.png)  
 
 Spring allows us to attach custom actions to _bean creation and destruction_. We can, for example, do it
@@ -103,17 +106,17 @@ Same as with _@PostConstruct_, the methods annotated with _@PreDestroy_ can have
 The purpose of this method should be to release resources or perform any other cleanup tasks
 before the bean gets destroyed, for example closing a database connection.
 
-8. Далее настроить подключение к БД на вкладке Database:  
+9. Далее настроить подключение к БД на вкладке Database:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/07_data_source.png)  
 
-9. Запускаем приложение:  
+10. Запускаем приложение:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/08_app_running.png)  
 
-10. Теперь смотрим созданные таблицы. Сгенерированы 2 независимые таблицы (внешних ключей нет, только первичные).
+11. Теперь смотрим созданные таблицы. Сгенерированы 2 независимые таблицы (внешних ключей нет, только первичные).
 Они включают поля родительского класса и свои:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/09_tables_structure.png)  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/10_quick_documentation.png)  
 
-11. В итоге сохранять можно только дочерние сущности — они пойдут в независимые таблицы
+12. В итоге сохранять можно только дочерние сущности — они пойдут в независимые таблицы
 и будут включать поля родительской сущности. Отдельно _Customer_ не сохранить, это абстракция, в которую
 вынесена часть полей.

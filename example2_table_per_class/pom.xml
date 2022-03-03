@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>com.spring</groupId>
-    <artifactId>example1</artifactId>
+    <artifactId>example2</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>example1</name>
-    <description>Example1 - Mapped Superclass</description>
+    <name>example2</name>
+    <description>Example2 - Table per class</description>
 
     <properties>
         <java.version>11</java.version>

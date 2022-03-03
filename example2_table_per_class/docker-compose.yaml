@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+    db:
+        image: 'postgres:13'
+        container_name: 'example2_db'
+        ports:
+            - 15432:5432
+        environment:
+            - 'POSTGRES_DB=ex2'
+            - 'POSTGRES_USER=admin2'
+            - 'POSTGRES_PASSWORD=pswd2'
