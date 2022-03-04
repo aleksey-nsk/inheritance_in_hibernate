@@ -217,5 +217,26 @@ before the bean gets destroyed, for example closing a database connection.
 тогда как в предыдущем примере было 4 оператора _insert_ — ещё заполнялась общая таблица,
 что гораздо менее эффективно.
 
-8. Запрос, который сгенерирует Hibernate, для получения списка всех людей:  
+8. **Недостаток — запрет _@NotNull_**: в таблице _person_ есть как общие для всех сущностей
+столбцы — поля класса _Person_, так и столбцы подклассов _Customer_ и _Employee_. Столбцы подклассов
+не всегда заполнены: если заказчик _Customer_, то столбцы, зарезервированные под _Employee_, остаются пустыми.
+И наоборот. Поэтому невозможно ограничить значение столбцов наследников ограничением _@NotNull_.
+Если _NotNull constraint_ непременно нужен, то надо использовать
+другую стратегию, например **_InheritanceType.JOINED_**.
+
+9. **Поиск всех людей**: поиск **полиморфичен**, то есть мы в _HQL_ выбираем из класса _Person_, но полученные
+люди имеют конкретный тип _Employee_ либо _Customer_:  
+`List<Person> persons = personRepository.findAll();`  
+Приведён поиск методом `findAll()` _JpaRepository_, но под капотом там _HQL_.
+
+При этом генерируется SQL SELECT из одной таблицы person (других нет):  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/09_query.png)  
+
+10. **Итог: стратегия наследования _SINGLE_TABLE_ — самая простая и эффективная.
+Единственный её недостаток — невозможность использовать _ограничение NotNull_ для столбцов подклассов**.
+
+### Использованные источники:
+- [Наследование с @MappedSuperclass](https://sysout.ru/nasledovanie-s-mappedsuperclass/)
+- [Наследование InheritanceType.TABLE_PER_CLASS](https://sysout.ru/nasledovanie-inheritancetype-table_per_class/)
+- [Наследование сущностей с помощью InheritanceType.JOINED](https://sysout.ru/nasledovanie-sushhnostej-s-pomoshhyu-joined-table-primer-na-hibernate-i-spring-boot/)
+- [Наследование сущностей с помощью InheritanceType.SINGLE_TABLE](https://sysout.ru/nasledovanie-sushhnostej-s-pomoshhyu-single-table-primer-na-hibernate-i-spring-boot/)

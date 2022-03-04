@@ -40,7 +40,7 @@ public class Example4Application {
         personRepository.save(customer);
 
         System.out.println("Select all persons");
-        List<Person> persons = personRepository.selectAll();
+        List<Person> persons = personRepository.findAll();
         System.out.println("persons: " + persons);
     }
 }
