@@ -30,13 +30,13 @@ public class Example4Application {
         System.out.println("I am init() method, using @PostConstruct");
 
         Employee employee = new Employee();
-        employee.setMonthsInCompany(11);
-        employee.setFirstname("Егорка");
+        employee.setMonthsInCompany(19);
+        employee.setFirstname("Кирил");
         personRepository.save(employee);
 
         Customer customer = new Customer();
-        customer.setNumberOfAccounts(12);
-        customer.setFirstname("Славик");
+        customer.setNumberOfAccounts(2);
+        customer.setFirstname("Федя");
         personRepository.save(customer);
 
         System.out.println("Select all persons");

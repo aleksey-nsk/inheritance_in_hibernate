@@ -1,5 +1,4 @@
-# Info
-- **Стратегии наследования в Hibernate**.
+# Стратегии наследования в Hibernate
 - Простые примеры кода.
 
 ### Модуль example1_mapped_superclass
@@ -16,24 +15,28 @@
    
 _Person_ — не сущность, в него просто вынесены общие поля сущностей _Employee_ и _Customer_.
 Класс _Person_ можно сделать **абстрактным**. Этот класс можно было бы назвать _AbstractEntity_.
-Ассоциаций (_@ManyToOne_, _@OneToMany_ и т.д.) с ним сделать нельзя!
+Ассоциаций (_@ManyToOne_, _@OneToMany_ и т.д.) с ним делать нельзя!
 
-**GenerationType.SEQUENCE** ("_sequence_" - "_последовательность_") - это специальный тип для генерации
+**_GenerationType.SEQUENCE_** ("_sequence_" - "_последовательность_") - это специальный тип для генерации
 значений из последовательности. Создаёте в базе данных, которая его поддерживает, например Postgres:  
 `CREATE SEQUENCE my_seq START WITH 100000;`  
 Используете в качестве генератора.
 
 `allocationSize` ("_allocation_" - "_распределение_") указывает Hibernat-у сколько нужно резервировать значений
-из последовательности за одно обращение к базе данных. В данном случае на каждое обращение - 1 значение. Чем больше,
+из последовательности за одно обращение к базе данных. В данном случае на каждое обращение 1 значение. Чем больше,
 тем сильнее снижается нагрузка на базу данных, но больше расходуется последовательность (иногда впустую).
 
 4. Дочерние классы _Employee_ и _Customer_:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/02_03_employee_and_customer.png)  
 
-5. Использована БД _Postgres_ в контейнере _Docker_. Настройки контейнера указываем в файле `docker-compose.yaml`:  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/04_docker_compose.png)  
+5. Репозиторий PersonRepository выглядит так:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/04_1_repo.png)  
 
-6. Настройки подключения к БД прописываем в файле `application.yaml`:  
+6. Использована БД _Postgres_ в контейнере _Docker_. Настройки контейнера указываем  
+в файле `docker-compose.yaml`:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/04_2_docker_compose.png)  
+
+7. Настройки подключения к БД прописываем в файле `application.yaml`:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/05_application.png)  
 
 In Spring/Spring-Boot, SQL database can be initialized in different ways depending on what your stack is.
@@ -58,17 +61,17 @@ otherwise `none` for all other cases.
 
 **В продакшене лучше выставлять значения `false` и `none`!**
 
-7. Главный класс выглядит так:  
+8. Главный класс выглядит так:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/06_main_class.png)  
 
-Spring allows us to attach custom actions to _bean creation and destruction_. We can, for example, do it
+Spring allows us to attach custom actions to **bean creation and destruction**. We can, for example, do it
 by implementing the _InitializingBean_ and _DisposableBean_ interfaces. A second possibility: the _@PostConstruct_
 and _@PreDestroy_ annotations.
 
-**Spring calls methods annotated with @PostConstruct only once, just after the initialization of bean properties**.
+**Spring calls methods annotated with _@PostConstruct_ only once, just after the initialization of bean properties**.
 Keep in mind that these methods will run even if there is nothing to initialize.
 The method annotated with _@PostConstruct_ can have any access level but it can't be static.
-One example usage of @PostConstruct is populating a database. During development, for instance,
+One example usage of _@PostConstruct_ is populating a database. During development, for instance,
 we might want to create some default users:
 
     @Component
@@ -88,7 +91,8 @@ we might want to create some default users:
 The above example will first initialize _UserRepository_ and then run _@PostConstruct_ method.
 
 **A method annotated with @PreDestroy runs only once, just before Spring removes our bean from the application context**.
-Same as with _@PostConstruct_, the methods annotated with _@PreDestroy_ can have any access level but can't be static.
+Same as with _@PostConstruct_, the methods annotated with _@PreDestroy_ can have any access level but
+can't be static. The example:
 
     @Component
     public class UserRepository {
@@ -104,19 +108,19 @@ Same as with _@PostConstruct_, the methods annotated with _@PreDestroy_ can have
 The purpose of this method should be to release resources or perform any other cleanup tasks
 before the bean gets destroyed, for example closing a database connection.
 
-8. Далее настроить подключение к БД на вкладке Database:  
+9. Далее настроить подключение к БД на вкладке Database:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/07_data_source.png)  
 
-9. Запускаем приложение:  
+10. Запускаем приложение:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/08_app_running.png)  
 
-10. Теперь смотрим созданные таблицы. Сгенерированы 2 независимые таблицы (внешних ключей нет, только первичные).
+11. Теперь смотрим созданные таблицы. Сгенерированы 2 независимые таблицы (внешних ключей нет, только первичные).
 Они включают поля родительского класса и свои:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/09_tables_structure.png)  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example1/10_quick_documentation.png)  
 
-11. В итоге сохранять можно только дочерние сущности — они пойдут в независимые таблицы
-и будут включать поля родительской сущности. Отдельно _Customer_ не сохранить, это абстракция, в которую
+12. В итоге сохранять можно только дочерние сущности — они пойдут в независимые таблицы
+и будут включать поля родительской сущности. Отдельно _Person_ не сохранить, это абстракция, в которую
 вынесена часть полей.
 
 ### Модуль example2_table_per_class
@@ -125,7 +129,8 @@ before the bean gets destroyed, for example closing a database connection.
 
 Заметим, что при стратегии наследования _InheritanceType.TABLE_PER_CLASS_ нельзя использовать такую стратегию
 генерации идентификатора: `@GeneratedValue(strategy = GenerationType.IDENTITY)` - такая стратегия задаёт
-автоинкрементное поле. В данном примере используем `@GeneratedValue(strategy = GenerationType.SEQUENCE)` — так можно.
+автоинкрементное поле. В данном примере
+используем `@GeneratedValue(strategy = GenerationType.SEQUENCE)` — так можно.
 
 2. Родительский класс _Person_:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example2/01_class_person.png)  
@@ -177,11 +182,11 @@ before the bean gets destroyed, for example closing a database connection.
 **Первичные ключи** `employees.id` и `customers.id` являются заодно и **внешними**: они ссылаются на `persons.id`.
 
 7. Были созданы 2 сущности и сохранены в БД. В консоли видно, что
-генерируется 4 оператора _insert_ (ещё заполняется общая таблица):
-!!!  ДОБАВИТЬ СКРИН !!!!!!!
+генерируется 4 оператора _insert_ (ещё заполняется общая таблица):  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/07_1_insert.png)  
 
 8. Запрос, который сгенерирует Hibernate, для получения списка всех людей:  
-![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/07_select.png)  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/07_2_select.png)  
 
 ### Модуль example4_single_table
 1. **Рассмотрим стратегию наследования _SINGLE_TABLE_. Стратегия наследования указывается в аннотации _@Inheritance_
@@ -212,15 +217,16 @@ before the bean gets destroyed, for example closing a database connection.
 столбец DTYPE — это столбец-дискриминатор. Он показывает, к какому классу принадлежит
 сущность: _Customer_ или _Employee_.
 
-7. Были созданы 2 сущности и сохранены в БД. В консоли видно, что генерируется два оператора _insert_:  
+7. Были созданы 2 сущности и сохранены в БД. В консоли видно, что генерируется 2 оператора _insert_:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/08_insert.png)  
 тогда как в предыдущем примере было 4 оператора _insert_ — ещё заполнялась общая таблица,
 что гораздо менее эффективно.
 
-8. **Недостаток — запрет _@NotNull_**: в таблице _person_ есть как общие для всех сущностей
+8. **Недостаток данной стратегии наследования — это запрет _@NotNull_**: в таблице _person_ есть
+как общие для всех сущностей
 столбцы — поля класса _Person_, так и столбцы подклассов _Customer_ и _Employee_. Столбцы подклассов
 не всегда заполнены: если заказчик _Customer_, то столбцы, зарезервированные под _Employee_, остаются пустыми.
-И наоборот. Поэтому невозможно ограничить значение столбцов наследников ограничением _@NotNull_.
+И наоборот. Поэтому невозможно ограничить значение столбцов наследников _ограничением @NotNull_.
 Если _NotNull constraint_ непременно нужен, то надо использовать
 другую стратегию, например **_InheritanceType.JOINED_**.
 
@@ -229,7 +235,7 @@ before the bean gets destroyed, for example closing a database connection.
 `List<Person> persons = personRepository.findAll();`  
 Приведён поиск методом `findAll()` _JpaRepository_, но под капотом там _HQL_.
 
-При этом генерируется SQL SELECT из одной таблицы person (других нет):  
+При этом генерируется SQL SELECT из одной таблицы _person_ (других нет):  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/09_query.png)  
 
 10. **Итог: стратегия наследования _SINGLE_TABLE_ — самая простая и эффективная.
