@@ -176,5 +176,46 @@ before the bean gets destroyed, for example closing a database connection.
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/06_quick_doc.png)  
 **Первичные ключи** `employees.id` и `customers.id` являются заодно и **внешними**: они ссылаются на `persons.id`.
 
-7. Запрос, который сгенерирует Hibernate, для получения списка всех людей:  
+7. Были созданы 2 сущности и сохранены в БД. В консоли видно, что
+генерируется 4 оператора _insert_ (ещё заполняется общая таблица):
+!!!  ДОБАВИТЬ СКРИН !!!!!!!
+
+8. Запрос, который сгенерирует Hibernate, для получения списка всех людей:  
 ![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example3/07_select.png)  
+
+### Модуль example4_single_table
+1. **Рассмотрим стратегию наследования _SINGLE_TABLE_. Стратегия наследования указывается в аннотации _@Inheritance_
+родительского класса _Person_. В данном случае пишем просто _@Inheritance_, потому что _InheritanceType.SINGLE_TABLE_
+является стратегией по умолчанию. Но можно было бы в аннотации явно
+указать _@Inheritance(strategy = InheritanceType.SINGLE_TABLE)_. Результат был бы тот же. Как понятно из названия,
+все сущности теперь будут храниться в одной таблице. Этот способ самый эффективный с точки зрения производительности,
+так как с одной таблицей работать быстрее, чем с несколькими**.
+
+2. Родительский класс:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/01_class_person.png)  
+
+3. Наследники:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/02_employee_and_customer.png)  
+
+4. Главный класс:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/03_main_class.png)  
+
+5. Запускаем приложение:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/04_run.png)  
+
+6. Схема в базе данных. В итоге генерируется такая схема, состоящая из одной таблицы:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/05_db.png)  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/06_structure.png)  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/07_quick_doc.png)  
+Как видим, все сущности хранятся в одной таблице _person_. Но как же подклассы различаются?
+С помощью **столбца-дискриминатора DTYPE**: при генерации схемы Hibernate добавляет
+столбец DTYPE — это столбец-дискриминатор. Он показывает, к какому классу принадлежит
+сущность: _Customer_ или _Employee_.
+
+7. Были созданы 2 сущности и сохранены в БД. В консоли видно, что генерируется два оператора _insert_:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/08_insert.png)  
+тогда как в предыдущем примере было 4 оператора _insert_ — ещё заполнялась общая таблица,
+что гораздо менее эффективно.
+
+8. Запрос, который сгенерирует Hibernate, для получения списка всех людей:  
+![](https://github.com/aleksey-nsk/inheritance_in_hibernate/blob/master/screenshots/example4/09_query.png)  

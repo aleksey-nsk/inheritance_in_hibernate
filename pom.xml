@@ -13,6 +13,7 @@
         <module>example1_mapped_superclass</module>
         <module>example2_table_per_class</module>
         <module>example3_joined</module>
+        <module>example4_single_table</module>
     </modules>
 
 </project>
